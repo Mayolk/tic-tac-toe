@@ -1,18 +1,19 @@
+// Game board
+
 const GameBoard = (function() {
 
   const gameboardArray = ['', '', '', '', '', '', '', '', ''];
   const gameboardUI = document.querySelectorAll('.board-field'); 
 
-  
   const placeSign = function() {
 
     let pickedField = this.getAttribute('data-board-index');
 
     if (gameboardArray[pickedField] === '') {
       
-      gameboardArray[pickedField] = 'x';
+      gameboardArray[pickedField] = currentPlayer.playerSign;
       fillBoard();
-
+      GameEngine.switchPlayer();
     }
 
   }
@@ -34,9 +35,39 @@ const GameBoard = (function() {
 }());
 
 
+// Game engine
+
+const GameEngine = (function() {
+
+  const switchPlayer = function() {
+
+    if (currentPlayer.playerSign === 'x') {
+      currentPlayer = player2;
+    } else {
+      currentPlayer = player1;
+    }
+
+  };
+
+  return {
+    switchPlayer
+  }
+
+}());
 
 
-// GameEngine
+// Player factory
 
+const Player = function (sign) {
 
-// PlayerFactory
+  this.playerSign = sign
+
+  return {
+    playerSign
+  }
+
+}
+
+const player1 = Player('x');
+const player2 = Player('o');
+let currentPlayer = player1;
