@@ -2,30 +2,54 @@
 
 const GameBoard = (function() {
 
-  const gameboardArray = ['', '', '', '', '', '', '', '', ''];
+  const gameData = ['', '', '', '', '', '', '', '', ''];
   const gameboardUI = document.querySelectorAll('.board-field'); 
 
   const placeSign = function() {
 
     let pickedField = this.getAttribute('data-board-index');
 
-    if (gameboardArray[pickedField] === '') {
+    if (gameData[pickedField] === '') {
       
-      gameboardArray[pickedField] = currentPlayer.playerSign;
+      gameData[pickedField] = currentPlayer.playerSign;
       fillBoard();
       GameEngine.switchPlayer();
+      checkResult();
     }
 
   }
 
   const fillBoard = function() {
 
-    for (let i = 0; i < gameboardArray.length; i++) {
-      gameboardUI[i].textContent = gameboardArray[i];
+    for (let i = 0; i < gameData.length; i++) {
+      gameboardUI[i].textContent = gameData[i];
     }
 
   };
 
+  const checkResult = function() {
+    let combinationsArray = [
+      [gameData[0], gameData[1], gameData[2]],
+      [gameData[3], gameData[4], gameData[5]],
+      [gameData[6], gameData[7], gameData[8]],
+      [gameData[0], gameData[3], gameData[6]],
+      [gameData[1], gameData[4], gameData[7]],
+      [gameData[2], gameData[5], gameData[8]],
+      [gameData[0], gameData[4], gameData[8]],
+      [gameData[2], gameData[4], gameData[6]]
+    ];
+    
+    combinationsArray.forEach( combo => {
+      
+      if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
+        console.log(`${combo[0]} wins`);
+      }
+
+      
+    })
+  };
+
+  // Event listeners
   gameboardUI.forEach( field => { field.addEventListener('click', placeSign) });
 
   return {
