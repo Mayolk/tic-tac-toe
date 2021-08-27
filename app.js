@@ -1,4 +1,4 @@
-// Player factory
+// Player Factory
 
 const Player = function (sign) {
 
@@ -8,43 +8,33 @@ const Player = function (sign) {
     playerSign
   }
 
-}
+};
 
-// Game engine
 
-const GameEngine = (function() {
+// Game Controller
 
+const GameController = (function() {
+
+  let gameOver = false;
   const player1 = Player('x');
   const player2 = Player('o');
-
-  return {
-    player1,
-    player2
-  }
-
-})();
-
-
-
-// Game board
-
-const GameBoard = (function() {
-
-  let currentPlayer = GameEngine.player1;
-  const gameData = ['', '', '', '', '', '', '', '', ''];
-  const gameboardUI = document.querySelectorAll('.board-field'); 
+  let currentPlayer = player1;
 
   // Event handler
   const placeSign = function() {
 
-    let pickedField = this.getAttribute('data-board-index');
+    if (!gameOver) {
 
-    if (gameData[pickedField] === '') {
-      
-      gameData[pickedField] = currentPlayer.playerSign;
-      fillBoard();
-      switchPlayer();
-      checkResult();
+      let pickedField = this.getAttribute('data-board-index');
+  
+      if (GameBoard.board[pickedField] === '') {
+        
+        GameBoard.board[pickedField] = currentPlayer.playerSign;
+        DisplayController.fillBoard();
+        switchPlayer();
+        checkResult();
+      }
+
     }
 
   }
@@ -52,48 +42,76 @@ const GameBoard = (function() {
   const switchPlayer = function() {
 
     if (currentPlayer.playerSign === 'x') {
-      currentPlayer = GameEngine.player2;
+      currentPlayer = player2;
     } else {
-      currentPlayer = GameEngine.player1;
-    }
-
-  };
-
-  const fillBoard = function() {
-
-    for (let i = 0; i < gameData.length; i++) {
-      gameboardUI[i].textContent = gameData[i];
+      currentPlayer = player1;
     }
 
   };
 
   const checkResult = function() {
-    let combinationsArray = [
-      [gameData[0], gameData[1], gameData[2]],
-      [gameData[3], gameData[4], gameData[5]],
-      [gameData[6], gameData[7], gameData[8]],
-      [gameData[0], gameData[3], gameData[6]],
-      [gameData[1], gameData[4], gameData[7]],
-      [gameData[2], gameData[5], gameData[8]],
-      [gameData[0], gameData[4], gameData[8]],
-      [gameData[2], gameData[4], gameData[6]]
+
+    let combinations = [
+      [GameBoard.board[0], GameBoard.board[1], GameBoard.board[2]],
+      [GameBoard.board[3], GameBoard.board[4], GameBoard.board[5]],
+      [GameBoard.board[6], GameBoard.board[7], GameBoard.board[8]],
+      [GameBoard.board[0], GameBoard.board[3], GameBoard.board[6]],
+      [GameBoard.board[1], GameBoard.board[4], GameBoard.board[7]],
+      [GameBoard.board[2], GameBoard.board[5], GameBoard.board[8]],
+      [GameBoard.board[0], GameBoard.board[4], GameBoard.board[8]],
+      [GameBoard.board[2], GameBoard.board[4], GameBoard.board[6]]
     ];
-    
-    combinationsArray.forEach( combo => {
+
+    combinations.forEach( combo => {
       
       if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
         console.log(`${combo[0]} wins`);
-        gameboardUI.forEach( field => { field.removeEventListener('click', placeSign) });
+        gameOver = true;
       }
 
     })
+    
   };
-
-  // Event listeners
-  gameboardUI.forEach( field => { field.addEventListener('click', placeSign) });
 
   return {
+    placeSign
+  };
+
+})();
+
+
+// Display Controller
+
+const DisplayController = (function() {
+
+  const fillBoard = function() {
+
+    for (let i = 0; i < GameBoard.board.length; i++) {
+      GameBoard.boardUI[i].textContent = GameBoard.board[i];
+    }
 
   };
+
+  return{
+    fillBoard
+  }
+
+})();
+
+
+// Game Board
+
+const GameBoard = (function() {
+
+  const boardUI = document.querySelectorAll('.board-field'); 
+  const board = ['', '', '', '', '', '', '', '', ''];
+
+  // Event listeners
+  boardUI.forEach( field => { field.addEventListener('click', GameController.placeSign) });
+
+  return {
+    board,
+    boardUI
+  }
 
 })();
