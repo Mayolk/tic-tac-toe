@@ -1,10 +1,40 @@
+// Player factory
+
+const Player = function (sign) {
+
+  this.playerSign = sign
+
+  return {
+    playerSign
+  }
+
+}
+
+// Game engine
+
+const GameEngine = (function() {
+
+  const player1 = Player('x');
+  const player2 = Player('o');
+
+  return {
+    player1,
+    player2
+  }
+
+})();
+
+
+
 // Game board
 
 const GameBoard = (function() {
 
+  let currentPlayer = GameEngine.player1;
   const gameData = ['', '', '', '', '', '', '', '', ''];
   const gameboardUI = document.querySelectorAll('.board-field'); 
 
+  // Event handler
   const placeSign = function() {
 
     let pickedField = this.getAttribute('data-board-index');
@@ -13,11 +43,21 @@ const GameBoard = (function() {
       
       gameData[pickedField] = currentPlayer.playerSign;
       fillBoard();
-      GameEngine.switchPlayer();
+      switchPlayer();
       checkResult();
     }
 
   }
+
+  const switchPlayer = function() {
+
+    if (currentPlayer.playerSign === 'x') {
+      currentPlayer = GameEngine.player2;
+    } else {
+      currentPlayer = GameEngine.player1;
+    }
+
+  };
 
   const fillBoard = function() {
 
@@ -43,9 +83,9 @@ const GameBoard = (function() {
       
       if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
         console.log(`${combo[0]} wins`);
+        gameboardUI.forEach( field => { field.removeEventListener('click', placeSign) });
       }
 
-      
     })
   };
 
@@ -56,42 +96,4 @@ const GameBoard = (function() {
 
   };
 
-}());
-
-
-// Game engine
-
-const GameEngine = (function() {
-
-  const switchPlayer = function() {
-
-    if (currentPlayer.playerSign === 'x') {
-      currentPlayer = player2;
-    } else {
-      currentPlayer = player1;
-    }
-
-  };
-
-  return {
-    switchPlayer
-  }
-
-}());
-
-
-// Player factory
-
-const Player = function (sign) {
-
-  this.playerSign = sign
-
-  return {
-    playerSign
-  }
-
-}
-
-const player1 = Player('x');
-const player2 = Player('o');
-let currentPlayer = player1;
+})();
