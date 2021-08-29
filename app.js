@@ -2,7 +2,7 @@
 
 const Player = function (sign) {
 
-  this.playerSign = sign
+  this.playerSign = sign;
 
   return {
     playerSign
@@ -19,6 +19,8 @@ const GameController = (function() {
   const player1 = Player('x');
   const player2 = Player('o');
   let currentPlayer = player1;
+  let winnerSign = '';
+
 
   // Event handler
   const placeSign = function() {
@@ -31,13 +33,14 @@ const GameController = (function() {
         
         GameBoard.board[pickedField] = currentPlayer.playerSign;
         DisplayController.fillBoard();
-        switchPlayer();
         checkResult();
+        switchPlayer();
       }
 
     }
 
   }
+
 
   const switchPlayer = function() {
 
@@ -48,6 +51,7 @@ const GameController = (function() {
     }
 
   };
+
 
   const checkResult = function() {
 
@@ -62,15 +66,44 @@ const GameController = (function() {
       [GameBoard.board[2], GameBoard.board[4], GameBoard.board[6]]
     ];
 
-    combinations.forEach( combo => {
+    // if there are not empty elements, end game
+    if (!GameBoard.board.some( sign => sign === '')) {
       
-      if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
-        console.log(`${combo[0]} wins`);
-        gameOver = true;
-      }
+      endGame();
+      
+    // if some of combinations where every element is x or 0, end game 
+    } else if (combinations.some( combo => {
 
-    })
+      if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
+        winnerSign = currentPlayer.playerSign;
+        return true; // return of some() function
+      } 
+
+    })) {
+
+      endGame();
+
+    }
     
+  };
+  
+
+  const endGame = function() {
+
+    if (winnerSign === '') {
+        
+      console.log('game over');
+      console.log(`its a draw`);
+      gameOver = true;
+      
+    } else {
+      
+      console.log('game over');
+      console.log(`${currentPlayer.playerSign} wins`);
+      gameOver = true;
+
+    }
+
   };
 
   return {
