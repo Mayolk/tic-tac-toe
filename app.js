@@ -1,11 +1,17 @@
 // Player Factory
 
-const Player = function (sign) {
+const Player = function (name, sign, current) {
 
+  this.playerName = name;
   this.playerSign = sign;
+  this.isCurrentPlayer = current;
+  this.isWinnner = false;
 
   return {
-    playerSign
+    playerName,
+    playerSign,
+    isCurrentPlayer,
+    isWinnner
   }
 
 };
@@ -15,12 +21,20 @@ const Player = function (sign) {
 
 const GameController = (function() {
 
-  let gameOver = false;
-  const player1 = Player('x');
-  const player2 = Player('o');
-  let currentPlayer = player1;
-  let winnerSign = '';
+  let gameOver = true;
+  const playerX = Player('playerX', 'x', true);
+  const playerO = Player('playerO', 'o', false);
 
+
+  // Event handler
+  const startGame = function() {
+
+    setPlayerNames();
+    DisplayController.showBoard();
+    DisplayController.hideGameStarter();
+    gameOver = false;
+    
+  };
 
   // Event handler
   const placeSign = function() {
@@ -31,23 +45,37 @@ const GameController = (function() {
   
       if (GameBoard.board[pickedField] === '') {
         
-        GameBoard.board[pickedField] = currentPlayer.playerSign;
+        if (playerX.isCurrentPlayer) {
+          GameBoard.board[pickedField] = playerX.playerSign;
+        } else {
+          GameBoard.board[pickedField] = playerO.playerSign;
+        }
+
         DisplayController.fillBoard();
         checkResult();
         switchPlayer();
+
       }
 
     }
 
-  }
+  };
 
+  const setPlayerNames = function() {
+
+    playerX.playerName = DisplayController.getPlayerXName();
+    playerO.playerName = DisplayController.getPlayerOName();
+    
+  };
 
   const switchPlayer = function() {
 
-    if (currentPlayer.playerSign === 'x') {
-      currentPlayer = player2;
+    if (playerX.isCurrentPlayer) {
+      playerX.isCurrentPlayer = false;
+      playerO.isCurrentPlayer = true;
     } else {
-      currentPlayer = player1;
+      playerX.isCurrentPlayer = true;
+      playerO.isCurrentPlayer = false;
     }
 
   };
@@ -74,10 +102,17 @@ const GameController = (function() {
     // if some of combinations where every element is x or 0, end game 
     } else if (combinations.some( combo => {
 
-      if (combo.every( sign => sign === 'x') || combo.every( sign => sign === 'o')) {
-        winnerSign = currentPlayer.playerSign;
-        return true; // return of some() function
-      } 
+      if (combo.every( sign => sign === 'x')) {
+
+        playerX.isWinnner = true;
+        return true; // exits some() function
+
+      } else if (combo.every( sign => sign === 'o')) {
+
+        playerO.isWinnner = true;
+        return true; // exits some() function
+
+      }
 
     })) {
 
@@ -87,27 +122,33 @@ const GameController = (function() {
     
   };
   
-
   const endGame = function() {
 
-    if (winnerSign === '') {
+    if (playerX.isWinnner) {
         
       console.log('game over');
-      console.log(`its a draw`);
-      gameOver = true;
+      console.log(`${playerX.playerName} wins`);
       
-    } else {
+    } else if (playerO.isWinnner) {
       
       console.log('game over');
-      console.log(`${currentPlayer.playerSign} wins`);
-      gameOver = true;
+      console.log(`${playerO.playerName} wins`);
 
+    } else {
+
+      console.log('game over');
+      console.log(`its a draw`);
+      
     }
+
+    gameOver = true;
 
   };
 
   return {
-    placeSign
+    placeSign,
+    startGame,
+    playerX
   };
 
 })();
@@ -117,16 +158,44 @@ const GameController = (function() {
 
 const DisplayController = (function() {
 
+  const playerXUI = document.querySelector('#player-x');
+  const playerOUI = document.querySelector('#player-o');
+  const startButtonUI = document.querySelector('#start-button');
+  const boardUI = document.querySelector('#gameboard');
+  const gameStarterUI = document.querySelector('#game-start');
+
   const fillBoard = function() {
 
     for (let i = 0; i < GameBoard.board.length; i++) {
-      GameBoard.boardUI[i].textContent = GameBoard.board[i];
+      GameBoard.boardFieldsUI[i].textContent = GameBoard.board[i];
     }
 
   };
 
-  return{
-    fillBoard
+  const showBoard = function() {
+
+    boardUI.classList.remove('is-hidden');
+
+  };
+
+  const getPlayerXName = () => playerXUI.value;
+  const getPlayerOName = () => playerOUI.value;
+
+  const hideGameStarter = function() {
+
+    gameStarterUI.classList.add('is-hidden');
+    
+  };
+
+  // Event Listener
+  startButtonUI.addEventListener('click', GameController.startGame);
+
+  return {
+    fillBoard,
+    getPlayerXName,
+    getPlayerOName,
+    showBoard,
+    hideGameStarter
   }
 
 })();
@@ -136,15 +205,15 @@ const DisplayController = (function() {
 
 const GameBoard = (function() {
 
-  const boardUI = document.querySelectorAll('.board-field'); 
+  const boardFieldsUI = document.querySelectorAll('.board-field'); 
   const board = ['', '', '', '', '', '', '', '', ''];
 
   // Event listeners
-  boardUI.forEach( field => { field.addEventListener('click', GameController.placeSign) });
+  boardFieldsUI.forEach( field => { field.addEventListener('click', GameController.placeSign) });
 
   return {
     board,
-    boardUI
+    boardFieldsUI
   }
 
 })();

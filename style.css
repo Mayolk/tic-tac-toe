@@ -10,7 +10,13 @@ font-family: Arial, Helvetica, sans-serif;
   padding: 0;
 }
 
+.is-hidden {
+  visibility: hidden;
+  position: absolute;
+}
+
 #main {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +27,26 @@ font-family: Arial, Helvetica, sans-serif;
   padding: 2rem 0;
 }
 
+#game-start {
+
+  width: 90vw;
+  max-width: 436px;
+}
+
+#player-inputs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
 #gameboard {
+  z-index: -1;
   border: rgba(73, 114, 20, 0.52) 2px solid;
   width: 90vw;
   max-width: 440px;

@@ -12,7 +12,31 @@
 
     <h1 id="title">Tic Tac Toe</h1>
 
-    <div id="gameboard">
+    <div id="game-start">
+
+      <div id="player-inputs">
+
+        <div class="player-info">
+          <label for="player-x">Player X:</label>
+          <input type="text" name="player-x" id="player-x" value="Player X">
+        </div>
+        
+        <div class="player-info">
+          <label for="player-o">Player O:</label>
+          <input type="text" name="player-o" id="player-o" value="Player O">
+        </div>
+
+      </div>
+
+      <button class="btn" id="start-button">Start Game</button>
+      
+    </div>
+    
+    <div id="game-restart" class="is-hidden">
+      <button class="btn" id="restart-button">Restart Game</button>
+    </div>
+
+    <div id="gameboard" class="is-hidden">
 
       <p class="board-field" data-board-index="0"></p>
       <p class="board-field" data-board-index="1"></p>
