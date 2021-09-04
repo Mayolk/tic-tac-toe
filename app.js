@@ -75,13 +75,8 @@ const GameController = (function() {
       [GameBoard.board[2], GameBoard.board[4], GameBoard.board[6]]
     ];
 
-    // if there are not empty elements, end game
-    if (!GameBoard.board.some( sign => sign === '')) {
-      
-      endGame();
-      
     // if some of combinations where every element is x or 0, end game 
-    } else if (combinations.some( combo => {
+    if (combinations.some( combo => {
 
       if (combo.every( sign => sign === 'x')) {
 
@@ -99,6 +94,11 @@ const GameController = (function() {
 
       endGame();
 
+    // if there are no empty elements, end game
+    } else if (!GameBoard.board.some( sign => sign === '')) {
+      
+      endGame();
+      
     }
     
   };

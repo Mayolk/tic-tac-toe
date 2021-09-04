@@ -24,6 +24,7 @@ svg {
 .btn {
   padding: .5rem 1rem;
   margin: .5rem 0;
+  cursor: pointer;
 }
 
 #main {
