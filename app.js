@@ -37,6 +37,25 @@ const GameController = (function() {
     
   };
 
+   // Event handler
+  const restartGame = function () {
+
+    DisplayController.showPlayerNames();
+    DisplayController.hideResult();
+
+    for (let i = 0; i < GameBoard.board.length; i++) {
+      GameBoard.board[i] = '';
+    }
+
+    if (playerO.isCurrentPlayer) {
+      switchPlayer();
+    }
+
+    DisplayController.updateUIBoard();
+    gameOver = false;
+
+  };
+
   // Event handler
   const placeSign = function() {
 
@@ -52,7 +71,7 @@ const GameController = (function() {
           GameBoard.board[pickedField] = playerO.playerSign;
         }
 
-        DisplayController.fillBoard();
+        DisplayController.updateUIBoard();
         checkResult();
         switchPlayer();
 
@@ -148,7 +167,7 @@ const GameController = (function() {
   return {
     placeSign,
     startGame,
-    playerX
+    restartGame
   };
 
 })();
@@ -171,7 +190,7 @@ const DisplayController = (function() {
   const resultUI = document.querySelector('#result');
   const restartButtonUI = document.querySelector('#restart-button');
 
-  const fillBoard = function() {
+  const updateUIBoard = function() {
 
     for (let i = 0; i < GameBoard.board.length; i++) {
       GameBoard.boardFieldsUI[i].textContent = GameBoard.board[i];
@@ -217,18 +236,28 @@ const DisplayController = (function() {
     gameOverUI.classList.remove('is-hidden');
   };
 
+  const hideResult = function() {
+
+    gameOverUI.classList.add('is-hidden');
+
+  };
+
   // Event Listener
   startButtonUI.addEventListener('click', GameController.startGame);
+  
+  // Event Listener
+  restartButtonUI.addEventListener('click', GameController.restartGame);
 
   return {
-    fillBoard,
+    updateUIBoard,
     getPlayerXName,
     getPlayerOName,
     showBoard,
     hideGameStarter,
     showPlayerNames,
     swapMouseIcons,
-    showResult
+    showResult,
+    hideResult
   }
 
 })();
