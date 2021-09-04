@@ -86,12 +86,12 @@ const GameController = (function() {
       if (combo.every( sign => sign === 'x')) {
 
         playerX.isWinnner = true;
-        return true; // exits some() function
+        return true; // to exit some() function
 
       } else if (combo.every( sign => sign === 'o')) {
 
         playerO.isWinnner = true;
-        return true; // exits some() function
+        return true; // to exit some() function
 
       }
 
@@ -127,24 +127,21 @@ const GameController = (function() {
   
   const endGame = function() {
 
+    gameOver = true;
+
     if (playerX.isWinnner) {
         
-      console.log('game over');
-      console.log(`${playerX.playerName} wins`);
+      DisplayController.showResult(`${playerX.playerName} wins`);
       
     } else if (playerO.isWinnner) {
       
-      console.log('game over');
-      console.log(`${playerO.playerName} wins`);
-
+      DisplayController.showResult(`${playerO.playerName} wins`);
+      
     } else {
-
-      console.log('game over');
-      console.log(`its a draw`);
+      
+      DisplayController.showResult(`It's a draw`);
       
     }
-
-    gameOver = true;
 
   };
 
@@ -161,15 +158,18 @@ const GameController = (function() {
 
 const DisplayController = (function() {
 
-  const playerXUI = document.querySelector('#player-x');
-  const playerOUI = document.querySelector('#player-o');
+  const playerXInputUI = document.querySelector('#player-x');
+  const playerOInputUI = document.querySelector('#player-o');
+  const gameStarterUI = document.querySelector('#game-start');
   const startButtonUI = document.querySelector('#start-button');
   const boardUI = document.querySelector('#gameboard');
-  const gameStarterUI = document.querySelector('#game-start');
   const gameOnUI = document.querySelector('#game-on');
   const playerXNameUI = document.querySelector('#player-x-name');
   const playerONameUI = document.querySelector('#player-o-name');
   const mouseIcons = document.querySelectorAll('.mouse-icon');
+  const gameOverUI = document.querySelector('#game-over');
+  const resultUI = document.querySelector('#result');
+  const restartButtonUI = document.querySelector('#restart-button');
 
   const fillBoard = function() {
 
@@ -193,8 +193,8 @@ const DisplayController = (function() {
 
   };
 
-  const getPlayerXName = () => playerXUI.value;
-  const getPlayerOName = () => playerOUI.value;
+  const getPlayerXName = () => playerXInputUI.value;
+  const getPlayerOName = () => playerOInputUI.value;
 
   const swapMouseIcons = function() {
 
@@ -210,6 +210,13 @@ const DisplayController = (function() {
     
   };
 
+  const showResult = function(message) {
+
+    gameOnUI.classList.add('is-hidden');
+    resultUI.textContent = message;
+    gameOverUI.classList.remove('is-hidden');
+  };
+
   // Event Listener
   startButtonUI.addEventListener('click', GameController.startGame);
 
@@ -220,7 +227,8 @@ const DisplayController = (function() {
     showBoard,
     hideGameStarter,
     showPlayerNames,
-    swapMouseIcons
+    swapMouseIcons,
+    showResult
   }
 
 })();

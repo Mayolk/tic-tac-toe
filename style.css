@@ -21,6 +21,11 @@ svg {
   position: absolute;
 }
 
+.btn {
+  padding: .5rem 1rem;
+  margin: .5rem 0;
+}
+
 #main {
   position: relative;
   display: flex;
@@ -34,12 +39,15 @@ svg {
 }
 
 #game-start {
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 90vw;
   max-width: 440px;
 }
 
 #player-inputs {
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -51,7 +59,8 @@ svg {
 }
 
 #game-on {
-  width: 440px;
+  width: 90vw;
+  max-width: 440px;
   display: flex;
   justify-content: space-between;
 }
@@ -71,6 +80,12 @@ svg {
 .mouse-icon {
   height: 1.25rem;
   color: red;
+}
+
+#game-over {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #gameboard {
