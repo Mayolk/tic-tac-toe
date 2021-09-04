@@ -10,6 +10,12 @@ font-family: Arial, Helvetica, sans-serif;
   padding: 0;
 }
 
+svg {
+  height: 100%;
+  width: auto;
+  stroke: currentColor;
+}
+
 .is-hidden {
   visibility: hidden;
   position: absolute;
@@ -30,7 +36,7 @@ font-family: Arial, Helvetica, sans-serif;
 #game-start {
 
   width: 90vw;
-  max-width: 436px;
+  max-width: 440px;
 }
 
 #player-inputs {
@@ -38,15 +44,36 @@ font-family: Arial, Helvetica, sans-serif;
   justify-content: space-between;
 }
 
-.player-info {
+.player-input {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+#game-on {
+  width: 440px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+
+.icon {
+  font-size: 2rem;
+  color: rgb(207, 0, 0);
+  font-weight: 600;
+}
+
+.mouse-icon {
+  height: 1.25rem;
+  color: red;
+}
 
 #gameboard {
-  z-index: -1;
   border: rgba(73, 114, 20, 0.52) 2px solid;
   width: 90vw;
   max-width: 440px;

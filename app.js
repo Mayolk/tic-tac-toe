@@ -30,6 +30,7 @@ const GameController = (function() {
   const startGame = function() {
 
     setPlayerNames();
+    DisplayController.showPlayerNames();
     DisplayController.showBoard();
     DisplayController.hideGameStarter();
     gameOver = false;
@@ -60,26 +61,6 @@ const GameController = (function() {
     }
 
   };
-
-  const setPlayerNames = function() {
-
-    playerX.playerName = DisplayController.getPlayerXName();
-    playerO.playerName = DisplayController.getPlayerOName();
-    
-  };
-
-  const switchPlayer = function() {
-
-    if (playerX.isCurrentPlayer) {
-      playerX.isCurrentPlayer = false;
-      playerO.isCurrentPlayer = true;
-    } else {
-      playerX.isCurrentPlayer = true;
-      playerO.isCurrentPlayer = false;
-    }
-
-  };
-
 
   const checkResult = function() {
 
@@ -121,6 +102,28 @@ const GameController = (function() {
     }
     
   };
+
+  const setPlayerNames = function() {
+
+    playerX.playerName = DisplayController.getPlayerXName();
+    playerO.playerName = DisplayController.getPlayerOName();
+    
+  };
+
+  const switchPlayer = function() {
+
+    if (playerX.isCurrentPlayer) {
+      playerX.isCurrentPlayer = false;
+      playerO.isCurrentPlayer = true;
+    } else {
+      playerX.isCurrentPlayer = true;
+      playerO.isCurrentPlayer = false;
+    }
+    
+    DisplayController.swapMouseIcons();
+
+  };
+
   
   const endGame = function() {
 
@@ -163,6 +166,10 @@ const DisplayController = (function() {
   const startButtonUI = document.querySelector('#start-button');
   const boardUI = document.querySelector('#gameboard');
   const gameStarterUI = document.querySelector('#game-start');
+  const gameOnUI = document.querySelector('#game-on');
+  const playerXNameUI = document.querySelector('#player-x-name');
+  const playerONameUI = document.querySelector('#player-o-name');
+  const mouseIcons = document.querySelectorAll('.mouse-icon');
 
   const fillBoard = function() {
 
@@ -178,8 +185,24 @@ const DisplayController = (function() {
 
   };
 
+  const showPlayerNames = function() {
+
+    playerONameUI.textContent = getPlayerOName();
+    playerXNameUI.textContent = getPlayerXName();
+    gameOnUI.classList.remove('is-hidden');
+
+  };
+
   const getPlayerXName = () => playerXUI.value;
   const getPlayerOName = () => playerOUI.value;
+
+  const swapMouseIcons = function() {
+
+    mouseIcons.forEach( icon => {
+      icon.classList.toggle('is-hidden');
+    })
+
+  };
 
   const hideGameStarter = function() {
 
@@ -195,7 +218,9 @@ const DisplayController = (function() {
     getPlayerXName,
     getPlayerOName,
     showBoard,
-    hideGameStarter
+    hideGameStarter,
+    showPlayerNames,
+    swapMouseIcons
   }
 
 })();
